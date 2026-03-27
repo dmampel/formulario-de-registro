@@ -12,6 +12,14 @@ export default function ParticipantCard({ participant, onDelete }: { participant
     };
 
     const style = getStyle(participant.nivel);
+    
+    const formatName = (name: string) => {
+        return name
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(' ');
+    };
+
     const initials = participant.nombre.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
 
     return (
@@ -21,7 +29,9 @@ export default function ParticipantCard({ participant, onDelete }: { participant
                     {initials}
                 </div>
                 <div>
-                    <h3 className="text-xl font-bold text-white group-hover:text-emerald-300 transition-colors tracking-tight">{participant.nombre.toLowerCase()}</h3>
+                    <h3 className="text-xl font-bold text-white group-hover:text-emerald-300 transition-colors tracking-tight">
+                        {formatName(participant.nombre)}
+                    </h3>
                     <p className={`text-sm font-bold flex items-center gap-1.5 ${style.color}`}>
                         <span className="opacity-70">{COUNTRY_FLAGS[participant.pais] || '📍'}</span>
                         {participant.pais}

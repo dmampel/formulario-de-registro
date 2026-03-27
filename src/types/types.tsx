@@ -16,4 +16,6 @@ export const COUNTRY_FLAGS: Record<string, string> = {
   'Uruguay': '🇺🇾',
   'México': '🇲🇽',
   'España': '🇪🇸'
-};
+}
+
+export const techOptions = ['React', 'Angular', 'Vue', 'Node', 'Python', 'Java'];
