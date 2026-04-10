@@ -1,6 +1,5 @@
 import { useState, useContext } from "react";
 import { ParticipantesContext } from "../context/ParticipantesContext";
-import type { Participant } from "../types/types";
 import Stack from "./Stack";
 import Modality from "./Modality";
 import Experience from "./Experience";
