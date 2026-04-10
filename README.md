@@ -1,73 +1,50 @@
-# React + TypeScript + Vite
+# Sistema de Registro de Participantes 🚀
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este es un proyecto completo de gestión de participantes para eventos, desarrollado con un stack moderno y un diseño premium.
 
-Currently, two official plugins are available:
+## 🛠️ Tecnologías Utilizadas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Frontend
+- **React 18** (con TypeScript)
+- **Vite** (para el entorno de desarrollo)
+- **Tailwind CSS** (estilizado moderno con efectos de glassmorphism)
+- **Context API** (para la gestión del estado global)
 
-## React Compiler
+### Backend
+- **Node.js** & **Express**
+- **SQLite3** (Base de datos persistente)
+- **CORS** (para comunicación entre puertos)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🎨 Características Principales
+- **Diseño Premium**: Interfaz oscura con estética de "vidrio", bordes brillantes y animaciones sutiles.
+- **Categorización por Nivel**: Las tarjetas de los participantes cambian de color y brillo según su nivel de experiencia (Principiante, Intermedio, Avanzado).
+- **CRUD Completo**: Registrar, listar, filtrar y eliminar participantes con persistencia en base de datos.
+- **Formateo Automático**: Los nombres se guardan y muestran con el formato correcto (iniciales en mayúsculas).
+- **Filtros Avanzados**: Búsqueda por nombre y filtrado por modalidad (Presencial, Virtual, Híbrido) o nivel.
 
-## Expanding the ESLint configuration
+## 🚀 Cómo Ejecutar el Proyecto
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1. Clonar el repositorio
+```bash
+git clone https://github.com/dmampel/formulario-de-registro.git
+cd formulario-de-registro
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 2. Ejecutar el Backend
+```bash
+cd backend
+npm install
+node index.js
 ```
+El backend correrá en `http://localhost:3000`.
+
+### 3. Ejecutar el Frontend
+En una nueva terminal, desde la raíz del proyecto:
+```bash
+npm install
+npm run dev
+```
+La aplicación estará disponible en `http://localhost:5173`.
+
+---
+*Desarrollado para el TP2 de Programación 4 - UTN.*

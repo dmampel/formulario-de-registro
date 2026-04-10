@@ -1,7 +1,8 @@
-import { useState } from "react";
-import type { Participant } from "../types/types";
+import { useState, useContext } from "react";
+import { ParticipantesContext } from "../context/ParticipantesContext";
 
-export default function RegistrationForm({ onAdd }: { onAdd: (p: Omit<Participant, 'id'>) => void }) {
+export default function RegistrationForm() {
+    const context = useContext(ParticipantesContext);
     const [formData, setFormData] = useState({
         nombre: '',
         email: '',
@@ -15,12 +16,14 @@ export default function RegistrationForm({ onAdd }: { onAdd: (p: Omit<Participan
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!formData.aceptaTerminos) return;
-        onAdd({
+        if (!formData.aceptaTerminos || !context) return;
+        
+        context.agregar({
             ...formData,
             edad: Number(formData.edad),
             tecnologias: [...formData.tecnologias]
         });
+        
         setFormData({
             nombre: '', email: '', edad: '', pais: 'Argentina',
             modalidad: 'Presencial', tecnologias: [], nivel: 'Principiante', aceptaTerminos: false

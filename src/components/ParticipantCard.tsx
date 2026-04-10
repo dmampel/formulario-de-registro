@@ -1,7 +1,10 @@
+import { useContext } from "react";
 import type { Participant } from "../types/types";
 import { COUNTRY_FLAGS } from "../types/types";
+import { ParticipantesContext } from "../context/ParticipantesContext";
 
-export default function ParticipantCard({ participant, onDelete }: { participant: Participant, onDelete: (id: number) => void }) {
+export default function ParticipantCard({ participant }: { participant: Participant }) {
+    const context = useContext(ParticipantesContext);
     const getStyle = (level: string) => {
         switch (level) {
             case 'Principiante': return { color: 'text-emerald-400', glow: 'glow-emerald', avatar: 'bg-emerald-500 text-emerald-950' };
@@ -21,7 +24,11 @@ export default function ParticipantCard({ participant, onDelete }: { participant
                     {initials}
                 </div>
                 <div>
-                    <h3 className="text-xl font-bold text-white group-hover:text-emerald-300 transition-colors tracking-tight">{participant.nombre.toLowerCase()}</h3>
+                    <h3 className="text-xl font-bold text-white group-hover:text-emerald-300 transition-colors tracking-tight">
+                        {participant.nombre.split(' ').map(word => 
+                            word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                        ).join(' ')}
+                    </h3>
                     <p className={`text-sm font-bold flex items-center gap-1.5 ${style.color}`}>
                         <span className="opacity-70">{COUNTRY_FLAGS[participant.pais] || '📍'}</span>
                         {participant.pais}
@@ -52,7 +59,10 @@ export default function ParticipantCard({ participant, onDelete }: { participant
             </div>
 
             <div className="mt-8 pt-6">
-                <button onClick={() => onDelete(participant.id)} className="btn-delete w-full font-bold uppercase tracking-widest text-[11px]">
+                <button 
+                  onClick={() => context?.eliminar(participant.id)} 
+                  className="btn-delete w-full font-bold uppercase tracking-widest text-[11px]"
+                >
                     Eliminar
                 </button>
             </div>

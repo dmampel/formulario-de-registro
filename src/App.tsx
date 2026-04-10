@@ -1,51 +1,42 @@
-import { useState, useEffect } from 'react'
-import type { Participant } from './types/types'
+import { useState, useContext } from 'react'
 import Header from './components/Header';
 import RegistrationForm from './components/RegistrationForm';
 import ParticipantCard from './components/ParticipantCard';
+import { ParticipantesContext } from './context/ParticipantesContext';
 
 function App() {
-  const [participants, setParticipants] = useState<Participant[]>(() => {
-    const saved = localStorage.getItem('participants');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const context = useContext(ParticipantesContext);
+  
+  if (!context) return null;
+
+  const { participantes, resetear } = context;
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filterModality, setFilterModality] = useState('Todas');
   const [filterLevel, setFilterLevel] = useState('Todos');
 
-  useEffect(() => {
-    localStorage.setItem('participants', JSON.stringify(participants));
-  }, [participants]);
-
-  const addParticipant = (participant: Omit<Participant, 'id'>) => {
-    const newParticipant = {
-      ...participant,
-      id: Date.now(),
-    };
-    setParticipants([...participants, newParticipant]);
-  };
-
-  const deleteParticipant = (id: number) => {
-    setParticipants(participants.filter(p => p.id !== id));
-  };
-
-  const filteredParticipants = participants.filter(p => {
+  const filteredParticipants = participantes.filter(p => {
     const matchesSearch = p.nombre.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesModality = filterModality === 'Todas' || p.modalidad === filterModality;
     const matchesLevel = filterLevel === 'Todos' || p.nivel === filterLevel;
     return matchesSearch && matchesModality && matchesLevel;
   });
 
+  const clearFilters = () => {
+    setSearchTerm('');
+    setFilterModality('Todas');
+    setFilterLevel('Todos');
+  };
+
   return (
     <div className="max-w-6xl mx-auto p-8 space-y-12">
       {/* Header Section */}
-      <Header participants={participants.length} />
+      <Header participants={participantes.length} />
 
       <main className="space-y-16">
         {/* Registration Form */}
         <div className="glass-card p-10">
-          <RegistrationForm onAdd={addParticipant} />
+          <RegistrationForm />
         </div>
 
       
@@ -91,6 +82,20 @@ function App() {
                 </select>
               </div>
             </div>
+            <div className="mt-8 flex justify-end gap-4">
+              <button 
+                onClick={clearFilters}
+                className="px-6 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-sm font-medium transition-all duration-300 cursor-pointer"
+              >
+                Limpiar filtros
+              </button>
+              <button 
+                onClick={resetear}
+                className="px-6 py-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 text-sm font-medium transition-all duration-300 cursor-pointer"
+              >
+                Resetear datos
+              </button>
+            </div>
           </div>
 
           {/* List */}  
@@ -99,7 +104,6 @@ function App() {
               <ParticipantCard 
                 key={participant.id} 
                 participant={participant} 
-                onDelete={deleteParticipant} 
               />
             ))}
           </div>
