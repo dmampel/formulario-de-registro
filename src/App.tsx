@@ -3,6 +3,7 @@ import Header from './components/Header';
 import RegistrationForm from './components/RegistrationForm';
 import ParticipantCard from './components/ParticipantCard';
 import { ParticipantesContext } from './context/ParticipantesContext';
+import Filter from './components/Filter';
 
 function App() {
   const context = useContext(ParticipantesContext);
@@ -55,32 +56,8 @@ function App() {
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-gray-500">Filtrar por modalidad</label>
-                <select 
-                  className="glass-input w-full appearance-none cursor-pointer"
-                  value={filterModality}
-                  onChange={(e) => setFilterModality(e.target.value)}
-                >
-                  <option className="bg-[#050b1a]">Todas</option>
-                  <option className="bg-[#050b1a]">Presencial</option>
-                  <option className="bg-[#050b1a]">Virtual</option>
-                  <option className="bg-[#050b1a]">Híbrido</option>
-                </select>
-              </div>
-              <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-gray-500">Filtrar por nivel</label>
-                <select 
-                  className="glass-input w-full appearance-none cursor-pointer"
-                  value={filterLevel}
-                  onChange={(e) => setFilterLevel(e.target.value)}
-                >
-                  <option className="bg-[#050b1a]">Todos</option>
-                  <option className="bg-[#050b1a]">Principiante</option>
-                  <option className="bg-[#050b1a]">Intermedio</option>
-                  <option className="bg-[#050b1a]">Avanzado</option>
-                </select>
-              </div>
+              <Filter label="Filtrar por modalidad" content={['Todas','Presencial', 'Virtual', 'Híbrido']} filter={filterModality} setFilter={setFilterModality} />
+              <Filter label="Filtrar por nivel" content={['Todos','Principiante', 'Intermedio', 'Avanzado']} filter={filterLevel} setFilter={setFilterLevel} />
             </div>
             <div className="mt-8 flex justify-end gap-4">
               <button 
