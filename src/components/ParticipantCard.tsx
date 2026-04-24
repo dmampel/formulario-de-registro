@@ -75,7 +75,7 @@ export default function ParticipantCard({ participant }: { participant: Particip
                     Editar
                 </button>
                 <button 
-                  onClick={() => context?.eliminar(participant.id)} 
+                  onClick={() => context?.dispatch({ type: 'ELIMINAR', payload: participant.id })} 
                   className="btn-delete flex-1 font-bold uppercase tracking-widest text-[11px]"
                 >
                     Eliminar
