@@ -10,7 +10,8 @@ function App() {
   
   if (!context) return null;
 
-  const { participantes, resetear } = context;
+  const { state, resetear } = context;
+  const { participantes } = state;
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filterModality, setFilterModality] = useState('Todas');

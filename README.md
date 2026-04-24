@@ -47,4 +47,5 @@ npm run dev
 La aplicación estará disponible en `http://localhost:5173`.
 
 ---
-*Desarrollado para el TP2 de Programación 4 - UTN.*
+*Desarrollado para el TP5 de Programación 4 - UTN.*
+*Arquitectura: Gestión de estado centralizada con useReducer + Context API y persistencia en SQLite.*

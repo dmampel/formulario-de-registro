@@ -55,7 +55,7 @@ app.post('/participantes', (req, res) => {
     );
 });
 
-// 3. Eliminar participante DELETE /participantes/{id}
+// 3. Eliminar participante DELETE /participantes/:id
 app.delete('/participantes/:id', (req, res) => {
     const id = req.params.id;
     db.run('DELETE FROM participantes WHERE id = ?', id, function (err) {
@@ -66,7 +66,29 @@ app.delete('/participantes/:id', (req, res) => {
     });
 });
 
-// 4. Resetear todos los datos (opcional para el botón de limpieza total en frontend)
+// 4. Actualizar participante PUT /participantes/:id
+app.put('/participantes/:id', (req, res) => {
+    const id = req.params.id;
+    const { nombre, email, edad, pais, modalidad, tecnologias, nivel, aceptaTerminos } = req.body;
+    db.run(
+        'UPDATE participantes SET nombre = ?, email = ?, edad = ?, pais = ?, modalidad = ?, tecnologias = ?, nivel = ?, aceptaTerminos = ? WHERE id = ?',
+        [nombre, email, edad, pais, modalidad, JSON.stringify(tecnologias), nivel, aceptaTerminos ? 1 : 0, id],
+        function (err) {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+            if (this.changes === 0) {
+                return res.status(404).json({ error: 'Participante no encontrado' });
+            }
+            res.status(200).json({
+                id: parseInt(id),
+                nombre, email, edad, pais, modalidad, tecnologias, nivel, aceptaTerminos
+            });
+        }
+    );
+});
+
+// 5. Resetear todos los datos (opcional para el botón de limpieza total en frontend)
 app.delete('/participantes', (req, res) => {
     db.run('DELETE FROM participantes', [], function (err) {
         if (err) {

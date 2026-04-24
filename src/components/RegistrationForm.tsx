@@ -1,9 +1,9 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { ParticipantesContext } from "../context/ParticipantesContext";
 import Stack from "./Stack";
 import Modality from "./Modality";
 import Experience from "./Experience";
-import { techOptions } from "../types/types";
+import { techOptions } from "../models/Participante";
 
 export default function RegistrationForm() {
     const context = useContext(ParticipantesContext);
@@ -18,6 +18,30 @@ export default function RegistrationForm() {
         aceptaTerminos: false
     });
 
+    if (!context) return null;
+    const { state, agregar, editar, dispatch } = context;
+    const { selectedParticipant } = state;
+
+    useEffect(() => {
+        if (selectedParticipant) {
+            setFormData({
+                nombre: selectedParticipant.nombre,
+                email: selectedParticipant.email,
+                edad: String(selectedParticipant.edad),
+                pais: selectedParticipant.pais,
+                modalidad: selectedParticipant.modalidad,
+                tecnologias: selectedParticipant.tecnologias,
+                nivel: selectedParticipant.nivel,
+                aceptaTerminos: selectedParticipant.aceptaTerminos
+            });
+        } else {
+            setFormData({
+                nombre: '', email: '', edad: '', pais: 'Argentina',
+                modalidad: 'Presencial', tecnologias: [], nivel: 'Principiante', aceptaTerminos: false
+            });
+        }
+    }, [selectedParticipant]);
+
     const formatName = (name: string) => {
         return name
             .split(' ')
@@ -25,21 +49,24 @@ export default function RegistrationForm() {
             .join(' ');
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!formData.aceptaTerminos || !context) return;
-        
-        context.agregar({
+        if (!formData.aceptaTerminos) return;
+
+        const data = {
             ...formData,
             nombre: formatName(formData.nombre),
             edad: Number(formData.edad),
             tecnologias: [...formData.tecnologias]
-        });
-        
-        setFormData({
-            nombre: '', email: '', edad: '', pais: 'Argentina',
-            modalidad: 'Presencial', tecnologias: [], nivel: 'Principiante', aceptaTerminos: false
-        });
+        };
+
+        if (selectedParticipant) {
+            await editar({ ...data, id: selectedParticipant.id });
+        } else {
+            await agregar(data);
+        }
+
+        dispatch({ type: 'SELECT_PARTICIPANTE', payload: null });
     };
 
     const handleTechChange = (tech: string) => {
@@ -122,8 +149,14 @@ export default function RegistrationForm() {
             </div>
 
             <button type="submit" className="btn-gradient w-auto min-w-[240px] text-lg py-4">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                Registrar Participante
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    {selectedParticipant ? (
+                        <path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6M21 12a9 9 0 0 1-15 6.7L3 16" />
+                    ) : (
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    )}
+                </svg>
+                {selectedParticipant ? 'Actualizar Participante' : 'Registrar Participante'}
             </button>
         </form>
     );

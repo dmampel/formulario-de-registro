@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import type { Participant } from "../types/types";
-import { COUNTRY_FLAGS } from "../types/types";
+import type { Participant } from "../models/Participante";
+import { COUNTRY_FLAGS } from "../models/Participante";
 import { ParticipantesContext } from "../context/ParticipantesContext";
 
 export default function ParticipantCard({ participant }: { participant: Participant }) {
@@ -64,10 +64,19 @@ export default function ParticipantCard({ participant }: { participant: Particip
                 </div>
             </div>
 
-            <div className="mt-8 pt-6">
+            <div className="mt-8 pt-6 flex gap-3">
+                <button 
+                  onClick={() => {
+                    context?.dispatch({ type: 'SELECT_PARTICIPANTE', payload: participant });
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }} 
+                  className="btn-edit flex-1 font-bold uppercase tracking-widest text-[11px]"
+                >
+                    Editar
+                </button>
                 <button 
                   onClick={() => context?.eliminar(participant.id)} 
-                  className="btn-delete w-full font-bold uppercase tracking-widest text-[11px]"
+                  className="btn-delete flex-1 font-bold uppercase tracking-widest text-[11px]"
                 >
                     Eliminar
                 </button>

@@ -1,0 +1,11 @@
+schema: spec-driven
+
+context: |
+  Tech stack: React (Vite), TypeScript, Node.js (Express), SQLite (sqlite3).
+  Architecture: Component-based (React), REST API (Backend).
+  Domain: Participant Registration System for UTN Programacion-4 Course.
+  Current State: TP4 completed, moving to TP5.
+  Conventions: 
+    - Using useReducer + Context for state management (starting TP5).
+    - Styling with Vanilla CSS (Glassmorphism theme).
+    - Backend running on port 3000, Frontend on 5173.

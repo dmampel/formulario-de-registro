@@ -27,6 +27,10 @@
   .btn-delete {
     @apply bg-red-900/20 border border-red-500/30 text-red-400 hover:bg-red-500/20 hover:border-red-500/50 py-2 rounded-xl transition-all;
   }
+
+  .btn-edit {
+    @apply bg-blue-900/20 border border-blue-500/30 text-blue-400 hover:bg-blue-500/20 hover:border-blue-500/50 py-2 rounded-xl transition-all;
+  }
 }
 
 .glow-emerald {
