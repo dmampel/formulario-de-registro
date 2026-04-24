@@ -5,6 +5,9 @@ import { ParticipantesContext } from "../context/ParticipantesContext";
 
 export default function ParticipantCard({ participant }: { participant: Participant }) {
     const context = useContext(ParticipantesContext);
+    if (!context) return null;
+    const { eliminar, dispatch } = context;
+
     const getStyle = (level: string) => {
         switch (level) {
             case 'Principiante': return { color: 'text-emerald-400', glow: 'glow-emerald', avatar: 'bg-emerald-500 text-emerald-950' };
@@ -67,7 +70,7 @@ export default function ParticipantCard({ participant }: { participant: Particip
             <div className="mt-8 pt-6 flex gap-3">
                 <button 
                   onClick={() => {
-                    context?.dispatch({ type: 'SELECT_PARTICIPANTE', payload: participant });
+                    dispatch({ type: 'SELECT_PARTICIPANTE', payload: participant });
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }} 
                   className="btn-edit flex-1 font-bold uppercase tracking-widest text-[11px]"
@@ -75,7 +78,7 @@ export default function ParticipantCard({ participant }: { participant: Particip
                     Editar
                 </button>
                 <button 
-                  onClick={() => context?.dispatch({ type: 'ELIMINAR', payload: participant.id })} 
+                  onClick={() => eliminar(participant.id)} 
                   className="btn-delete flex-1 font-bold uppercase tracking-widest text-[11px]"
                 >
                     Eliminar
