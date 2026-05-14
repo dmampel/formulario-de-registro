@@ -1,6 +1,7 @@
 import { createContext, useReducer, useEffect, type ReactNode } from 'react';
 import type { Participant } from '../models/Participante';
 import { participantesReducer, initialState, type Action, type State } from '../reducers/participantesReducer';
+import { useAuth } from './AuthContext';
 
 interface ContextType {
   state: State;
@@ -17,20 +18,34 @@ const API_URL = 'http://localhost:3000/participantes';
 
 export function ParticipantesProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(participantesReducer, initialState);
+  const { token } = useAuth();
 
   // Cargar participantes iniciales desde la BD
   useEffect(() => {
-    fetch(API_URL)
+    if (!token) return;
+
+    fetch(API_URL, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
       .then((res) => res.json())
-      .then((data) => dispatch({ type: 'SET', payload: data }))
+      .then((data) => {
+        if (!data.error) {
+          dispatch({ type: 'SET', payload: data });
+        }
+      })
       .catch((err) => console.error('Error fetching participants:', err));
-  }, []);
+  }, [token]);
 
   const agregar = async (p: Omit<Participant, 'id'>) => {
     try {
       const response = await fetch(API_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(p),
       });
       if (response.ok) {
@@ -50,7 +65,10 @@ export function ParticipantesProvider({ children }: { children: ReactNode }) {
     try {
       const response = await fetch(`${API_URL}/${p.id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(p),
       });
       if (response.ok) {
@@ -70,6 +88,9 @@ export function ParticipantesProvider({ children }: { children: ReactNode }) {
     try {
       const response = await fetch(`${API_URL}/${id}`, {
         method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
       if (response.ok) {
         dispatch({ type: 'ELIMINAR', payload: id });
@@ -84,6 +105,9 @@ export function ParticipantesProvider({ children }: { children: ReactNode }) {
       try {
         const response = await fetch(API_URL, {
           method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
         });
         if (response.ok) {
           dispatch({ type: 'RESET' });

@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import type { Participant } from "../models/Participante";
 import { COUNTRY_FLAGS } from "../models/Participante";
 import { ParticipantesContext } from "../context/ParticipantesContext";
+import { useAuth } from "../context/AuthContext";
 
 export default function ParticipantCard({ participant }: { participant: Participant }) {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const context = useContext(ParticipantesContext);
     if (!context) return null;
     const { eliminar } = context;
@@ -69,20 +71,22 @@ export default function ParticipantCard({ participant }: { participant: Particip
                 </div>
             </div>
 
-            <div className="mt-8 pt-6 flex gap-3">
-                <button 
-                  onClick={() => navigate(`/editar/${participant.id}`)} 
-                  className="btn-edit flex-1 font-bold uppercase tracking-widest text-[11px]"
-                >
-                    Editar
-                </button>
-                <button 
-                  onClick={() => eliminar(participant.id)} 
-                  className="btn-delete flex-1 font-bold uppercase tracking-widest text-[11px]"
-                >
-                    Eliminar
-                </button>
-            </div>
+            {user?.rol === 'ADMIN' && (
+                <div className="mt-8 pt-6 flex gap-3">
+                    <button 
+                        onClick={() => navigate(`/editar/${participant.id}`)} 
+                        className="btn-edit flex-1 font-bold uppercase tracking-widest text-[11px]"
+                    >
+                        Editar
+                    </button>
+                    <button 
+                        onClick={() => eliminar(participant.id)} 
+                        className="btn-delete flex-1 font-bold uppercase tracking-widest text-[11px]"
+                    >
+                        Eliminar
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
