@@ -5,7 +5,7 @@ import Modality from "./Modality";
 import Experience from "./Experience";
 import { techOptions } from "../models/Participante";
 
-export default function RegistrationForm() {
+export default function RegistrationForm({ onSuccess }: { onSuccess?: () => void }) {
     const context = useContext(ParticipantesContext);
     const [formData, setFormData] = useState({
         nombre: '',
@@ -84,13 +84,9 @@ export default function RegistrationForm() {
 
         dispatch({ type: 'SELECT_PARTICIPANTE', payload: null });
         
-        // Scroll hacia abajo para ver el resultado
-        setTimeout(() => {
-            window.scrollTo({ 
-                top: document.documentElement.scrollHeight, 
-                behavior: 'smooth' 
-            });
-        }, 100);
+        if (onSuccess) {
+            onSuccess();
+        }
     };
 
     const handleTechChange = (tech: string) => {

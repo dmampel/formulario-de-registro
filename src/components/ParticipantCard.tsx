@@ -1,12 +1,14 @@
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import type { Participant } from "../models/Participante";
 import { COUNTRY_FLAGS } from "../models/Participante";
 import { ParticipantesContext } from "../context/ParticipantesContext";
 
 export default function ParticipantCard({ participant }: { participant: Participant }) {
+    const navigate = useNavigate();
     const context = useContext(ParticipantesContext);
     if (!context) return null;
-    const { eliminar, dispatch } = context;
+    const { eliminar } = context;
 
     const getStyle = (level: string) => {
         switch (level) {
@@ -69,10 +71,7 @@ export default function ParticipantCard({ participant }: { participant: Particip
 
             <div className="mt-8 pt-6 flex gap-3">
                 <button 
-                  onClick={() => {
-                    dispatch({ type: 'SELECT_PARTICIPANTE', payload: participant });
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }} 
+                  onClick={() => navigate(`/editar/${participant.id}`)} 
                   className="btn-edit flex-1 font-bold uppercase tracking-widest text-[11px]"
                 >
                     Editar
@@ -86,4 +85,4 @@ export default function ParticipantCard({ participant }: { participant: Particip
             </div>
         </div>
     );
-}
+}
