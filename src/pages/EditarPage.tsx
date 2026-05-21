@@ -41,7 +41,7 @@ const EditarPage = () => {
             </div>
 
             <div className="glass-card p-10">
-                <RegistrationForm onSuccess={() => navigate('/')} />
+                <RegistrationForm onSuccess={() => navigate('/lista')} />
             </div>
         </div>
     );

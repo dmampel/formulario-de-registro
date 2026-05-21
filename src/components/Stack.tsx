@@ -1,4 +1,7 @@
+import { useId } from "react";
+
 export default function Stack({formData, handleTechChange, techOptions}: {formData: any, handleTechChange: (tech: string) => void, techOptions: string[]}) {
+    const baseId = useId();
   return (
     <div className="space-y-4">
       <label className="text-xs font-bold uppercase tracking-widest text-gray-500">
@@ -7,6 +10,7 @@ export default function Stack({formData, handleTechChange, techOptions}: {formDa
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {techOptions.map((tech) => (
           <label
+            htmlFor={`${baseId}-${tech}`}
             key={tech}
             className={`flex items-center gap-3 px-5 py-3 rounded-xl border cursor-pointer transition-all ${
               formData.tecnologias.includes(tech)
@@ -40,6 +44,7 @@ export default function Stack({formData, handleTechChange, techOptions}: {formDa
             </div>
             <span className="text-sm font-medium">{tech}</span>
             <input
+              id={`${baseId}-${tech}`}
               type="checkbox"
               className="hidden"
               checked={formData.tecnologias.includes(tech)}

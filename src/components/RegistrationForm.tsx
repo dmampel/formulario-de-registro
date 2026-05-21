@@ -1,11 +1,13 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useId, useRef } from "react";
 import { ParticipantesContext } from "../context/ParticipantesContext";
+import { useToast } from "../context/ToastContext";
 import Stack from "./Stack";
 import Modality from "./Modality";
 import Experience from "./Experience";
 import { techOptions } from "../models/Participante";
 
 export default function RegistrationForm({ onSuccess }: { onSuccess?: () => void }) {
+    const { addToast } = useToast();
     const context = useContext(ParticipantesContext);
     const [formData, setFormData] = useState({
         nombre: '',
@@ -22,6 +24,12 @@ export default function RegistrationForm({ onSuccess }: { onSuccess?: () => void
     if (!context) return null;
     const { state, agregar, editar, dispatch } = context;
     const { selectedParticipant } = state;
+    const baseId = useId();
+    const nombreRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        nombreRef.current?.focus();
+    }, []);
 
     useEffect(() => {
         if (selectedParticipant) {
@@ -78,8 +86,10 @@ export default function RegistrationForm({ onSuccess }: { onSuccess?: () => void
 
         if (selectedParticipant) {
             await editar({ ...data, id: selectedParticipant.id });
+            addToast(`Participante actualizado correctamente`, 'success');
         } else {
             await agregar(data);
+            addToast(`Participante registrado correctamente`, 'success');
         }
 
         dispatch({ type: 'SELECT_PARTICIPANTE', payload: null });
@@ -106,8 +116,10 @@ export default function RegistrationForm({ onSuccess }: { onSuccess?: () => void
         <form onSubmit={handleSubmit} className="space-y-10" noValidate>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
                 <div className="flex flex-col">
-                    <label className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Nombre</label>
+                    <label htmlFor={`${baseId}-nombre`} className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Nombre</label>
                     <input
+                        id={`${baseId}-nombre`}
+                        ref={nombreRef}
                         type="text"
                         placeholder="Tu nombre completo"
                         className={`glass-input w-full ${errors.nombre ? 'border-red-500/50 bg-red-500/5' : ''}`}
@@ -120,8 +132,9 @@ export default function RegistrationForm({ onSuccess }: { onSuccess?: () => void
                     <ErrorMsg name="nombre" />
                 </div>
                 <div className="flex flex-col">
-                    <label className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Email</label>
+                    <label htmlFor={`${baseId}-email`} className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Email</label>
                     <input
+                        id={`${baseId}-email`}
                         type="email"
                         placeholder="correo@ejemplo.com"
                         className={`glass-input w-full ${errors.email ? 'border-red-500/50 bg-red-500/5' : ''}`}
@@ -134,8 +147,9 @@ export default function RegistrationForm({ onSuccess }: { onSuccess?: () => void
                     <ErrorMsg name="email" />
                 </div>
                 <div className="flex flex-col">
-                    <label className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Edad</label>
+                    <label htmlFor={`${baseId}-edad`} className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Edad</label>
                     <input
+                        id={`${baseId}-edad`}
                         type="number"
                         placeholder="25"
                         className={`glass-input w-full ${errors.edad ? 'border-red-500/50 bg-red-500/5' : ''}`}
@@ -148,8 +162,9 @@ export default function RegistrationForm({ onSuccess }: { onSuccess?: () => void
                     <ErrorMsg name="edad" />
                 </div>
                 <div className="flex flex-col">
-                    <label className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">País</label>
+                    <label htmlFor={`${baseId}-pais`} className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">País</label>
                     <select
+                        id={`${baseId}-pais`}
                         className="glass-input w-full appearance-none"
                         value={formData.pais}
                         onChange={e => setFormData({ ...formData, pais: e.target.value })}
@@ -175,7 +190,7 @@ export default function RegistrationForm({ onSuccess }: { onSuccess?: () => void
             </div>
 
             <div className="pt-4 flex flex-col gap-2">
-                <label className={`flex items-center gap-3 glass-card bg-transparent p-4 cursor-pointer group hover:bg-white/[0.02] transition-all ${errors.aceptaTerminos ? 'border-red-500/30 bg-red-500/5' : 'border-white/5'}`}>
+                <label htmlFor={`${baseId}-terminos`} className={`flex items-center gap-3 glass-card bg-transparent p-4 cursor-pointer group hover:bg-white/[0.02] transition-all ${errors.aceptaTerminos ? 'border-red-500/30 bg-red-500/5' : 'border-white/5'}`}>
                     <div className={`w-6 h-6 rounded-lg border flex items-center justify-center transition-all ${formData.aceptaTerminos ? 'bg-emerald-500 border-emerald-400 shadow-[0_0_15px_-3px_rgba(16,185,129,0.5)]' : 'border-white/20 group-hover:border-white/40'
                         }`}>
                         {formData.aceptaTerminos && (
@@ -183,7 +198,7 @@ export default function RegistrationForm({ onSuccess }: { onSuccess?: () => void
                         )}
                     </div>
                     <span className="text-sm font-medium text-gray-400 group-hover:text-gray-300">Acepto los términos y condiciones del evento</span>
-                    <input type="checkbox" className="hidden" checked={formData.aceptaTerminos} onChange={e => {
+                    <input id={`${baseId}-terminos`} type="checkbox" className="hidden" checked={formData.aceptaTerminos} onChange={e => {
                         setFormData({ ...formData, aceptaTerminos: e.target.checked });
                         if (errors.aceptaTerminos) setErrors({ ...errors, aceptaTerminos: '' });
                     }} />

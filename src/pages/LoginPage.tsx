@@ -80,8 +80,24 @@ const LoginPage = () => {
                     </button>
                 </form>
 
-                <div className="pt-4 text-center text-xs text-gray-500 font-medium">
-                    <p>Usa admin / admin123 o consulta / user123</p>
+                <div className="pt-4 flex flex-col gap-2">
+                    <p className="text-center text-xs text-gray-500 font-medium mb-1">Cuentas de prueba rápida:</p>
+                    <div className="flex gap-2 justify-center">
+                        <button
+                            type="button"
+                            onClick={() => { setUsername('admin'); setPassword('admin123'); }}
+                            className="px-4 py-2 text-xs font-bold rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-emerald-400 cursor-pointer"
+                        >
+                            Admin
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => { setUsername('consulta'); setPassword('user123'); }}
+                            className="px-4 py-2 text-xs font-bold rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-cyan-400 cursor-pointer"
+                        >
+                            Consulta
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

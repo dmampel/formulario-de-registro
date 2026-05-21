@@ -4,10 +4,12 @@ import type { Participant } from "../models/Participante";
 import { COUNTRY_FLAGS } from "../models/Participante";
 import { ParticipantesContext } from "../context/ParticipantesContext";
 import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 
 export default function ParticipantCard({ participant }: { participant: Participant }) {
     const navigate = useNavigate();
     const { user } = useAuth();
+    const { addToast } = useToast();
     const context = useContext(ParticipantesContext);
     if (!context) return null;
     const { eliminar } = context;
@@ -80,7 +82,10 @@ export default function ParticipantCard({ participant }: { participant: Particip
                         Editar
                     </button>
                     <button 
-                        onClick={() => eliminar(participant.id)} 
+                        onClick={() => {
+                            eliminar(participant.id);
+                            addToast('Participante eliminado', 'info');
+                        }} 
                         className="btn-delete flex-1 font-bold uppercase tracking-widest text-[11px]"
                     >
                         Eliminar

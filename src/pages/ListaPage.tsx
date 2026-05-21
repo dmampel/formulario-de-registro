@@ -1,8 +1,9 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useRef } from 'react';
 import ParticipantCard from '../components/ParticipantCard';
 import { ParticipantesContext } from '../context/ParticipantesContext';
 import Filter from '../components/Filter';
-import { Link } from 'react-router-dom';
+import { useShortcut } from '../hooks/useShortcut';
+import { useDebounce } from '../hooks/useDebounce';
 
 const ListaPage = () => {
   const context = useContext(ParticipantesContext);
@@ -16,8 +17,16 @@ const ListaPage = () => {
   const [filterModality, setFilterModality] = useState('Todas');
   const [filterLevel, setFilterLevel] = useState('Todos');
 
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
+  useShortcut('b', 'ctrl', (e) => {
+    e.preventDefault();
+    searchInputRef.current?.focus();
+  });
+
   const filteredParticipants = participantes.filter(p => {
-    const matchesSearch = p.nombre.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = p.nombre.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
     const matchesModality = filterModality === 'Todas' || p.modalidad === filterModality;
     const matchesLevel = filterLevel === 'Todos' || p.nivel === filterLevel;
     return matchesSearch && matchesModality && matchesLevel;
@@ -41,6 +50,7 @@ const ListaPage = () => {
           <div className="space-y-2">
             <label className="text-xs font-bold uppercase tracking-widest text-gray-500">Buscar por nombre</label>
             <input 
+              ref={searchInputRef}
               type="text" 
               placeholder="Nombre..."
               className="glass-input w-full"
