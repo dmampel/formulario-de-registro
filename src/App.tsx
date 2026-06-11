@@ -10,6 +10,7 @@ import PublicaPage from './pages/PublicaPage';
 import Navbar from './components/Navbar';
 import ScrollToTop from './components/ScrollToTop';
 import PrivateRoute from './routes/PrivateRoute';
+import CursosPage from './pages/CursosPage';
 
 function App() {
   const context = useContext(ParticipantesContext);
@@ -55,6 +56,11 @@ function App() {
             <Route path="/menu_inicio" element={
               <PrivateRoute>
                 <ListaPage />
+              </PrivateRoute>
+            } />
+            <Route path="/cursos" element={
+              <PrivateRoute>
+                <CursosPage />
               </PrivateRoute>
             } />
           </Routes>

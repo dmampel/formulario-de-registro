@@ -11,6 +11,7 @@ const Navbar = () => {
         { name: 'Inicio', path: '/' },
         { name: 'Listado', path: '/lista' },
         { name: 'Nuevo Participante', path: '/nuevo', role: 'ADMIN' },
+        { name: 'Cursos', path: '/cursos' },
     ];
 
     const filteredLinks = navLinks.filter(link => {

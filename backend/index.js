@@ -2,10 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const db = require('./db');
+const { MercadoPagoConfig, Preference } = require('mercadopago');
 
 const app = express();
 const PORT = 3000;
 const SECRET_KEY = 'ultrasecret-key-tp7';
+
+// Configurar Mercado Pago (reemplazar con el token real o usar variables de entorno)
+const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN || 'TEST-XXXXXXXXX-XXXXXXXX-XXXXXXXX' });
 
 app.use(cors());
 app.use(express.json());
@@ -144,6 +148,45 @@ app.delete('/participantes', authenticateToken, authorizeRole('ADMIN'), (req, re
             res.status(200).json({ message: 'Todos los datos eliminados' });
         });
     });
+});
+
+// --- ENDPOINTS MERCADO PAGO ---
+
+app.post('/create_preference', async (req, res) => {
+    try {
+        const { title, price } = req.body;
+        
+        const preference = new Preference(client);
+        
+        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+
+        const result = await preference.create({
+            body: {
+                items: [
+                    {
+                        title: title,
+                        quantity: 1,
+                        unit_price: Number(price),
+                        currency_id: 'ARS'
+                    }
+                ],
+                back_urls: {
+                    success: `${frontendUrl}/cursos`,
+                    failure: `${frontendUrl}/cursos`,
+                    pending: `${frontendUrl}/cursos`
+                },
+                auto_return: 'approved'
+            }
+        });
+
+        res.json({
+            id: result.id,
+            init_point: result.init_point
+        });
+    } catch (error) {
+        console.error("Error creating preference:", error);
+        res.status(500).json({ error: "Error al crear la preferencia de Mercado Pago" });
+    }
 });
 
 app.listen(PORT, () => {
