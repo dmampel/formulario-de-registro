@@ -17,18 +17,21 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [user, setUser] = useState<User | null>(null);
-    const [token, setToken] = useState<string | null>(null);
+    const [user, setUser] = useState<User | null>(() => {
+        const savedUser = localStorage.getItem('user');
+        return savedUser ? JSON.parse(savedUser) : null;
+    });
+    const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'));
 
-    // Cargar sesión al iniciar
+    // Cargar sesión al iniciar (ya se hace en el valor inicial, pero se deja por seguridad)
     useEffect(() => {
         const savedToken = localStorage.getItem('token');
         const savedUser = localStorage.getItem('user');
-        if (savedToken && savedUser) {
+        if (savedToken && savedUser && (!token || !user)) {
             setToken(savedToken);
             setUser(JSON.parse(savedUser));
         }
-    }, []);
+    }, [token, user]);
 
     const login = async (username: string, pass: string) => {
         try {

@@ -154,7 +154,7 @@ app.delete('/participantes', authenticateToken, authorizeRole('ADMIN'), (req, re
 
 app.post('/create_preference', async (req, res) => {
     try {
-        const { title, price } = req.body;
+        const { id, title, price } = req.body;
         
         const preference = new Preference(client);
         
@@ -162,6 +162,7 @@ app.post('/create_preference', async (req, res) => {
 
         const result = await preference.create({
             body: {
+                external_reference: id ? id.toString() : 'curso',
                 items: [
                     {
                         title: title,
